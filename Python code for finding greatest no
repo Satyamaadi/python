@@ -1,0 +1,7 @@
+n=int(input("enter n"))
+m=int(input("enter m"))
+if n>m:
+   return n
+else:
+   return m
+   
