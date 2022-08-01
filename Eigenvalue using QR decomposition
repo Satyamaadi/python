@@ -1,0 +1,64 @@
+import numpy as np
+from numpy.linalg import eig
+
+def gramschmidt(A):
+    """
+    Applies the Gram-Schmidt method to A
+    and returns Q and R, so Q*R = A.
+    """
+    R = np.zeros((A.shape[1], A.shape[1]))
+    Q = np.zeros(A.shape)
+    for k in range(0, A.shape[1]):
+        R[k, k] = np.sqrt(np.dot(A[:, k], A[:, k]))
+        Q[:, k] = A[:, k]/R[k, k]
+        for j in range(k+1, A.shape[1]):
+            R[k, j] = np.dot(Q[:, k], A[:, j])
+            A[:, j] = A[:, j] - R[k, j]*Q[:, k]
+    return Q, R
+
+def main():
+    """
+    Prompts for n and generates a random matrix.
+    """
+    
+    
+    cols = int(input('give number of columns : '))
+    rows = int(input('give number of rows : '))
+    A = np.random.rand(rows, cols)
+    print('A = ')
+    print(A)
+    Q, R = gramschmidt(A)
+    print('Q = ')
+    print(Q)
+    print('R(Q^T*A) = ')
+    print(R)
+    print('Q^T*Q = ')
+    print( np.dot(Q.transpose(), Q))
+    print('Q*R =')
+    print(np.dot(Q, R))
+    print('Eigen')
+    print(eig(A))
+    def eigen_qr_simple(A, iterations=500000):
+      Ak = np.copy(A)
+      n = A.shape[0]
+      QQ = np.eye(n)
+      for k in range(iterations):
+          Q, R = np.linalg.qr(Ak)
+          Ak = R @ Q
+          QQ = QQ @ Q
+          # we "peek" into the structure of matrix A from time to time
+          # to see how it looks
+          if k%10000 == 0:
+              print("A",k,"=")
+              print(Ak)
+              print("\n")
+      return Ak, QQ
+
+    print(eigen_qr_simple(A))
+    print('--------------------------------------')
+
+main()    
+
+
+
+    
